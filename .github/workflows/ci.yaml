@@ -19,8 +19,8 @@ jobs:
         uses: actions/checkout@v2 # Es el api ge Git Actions q usamos
       - name: build
         run: docker build --file ${file} --no-cache --tag ${registry}/${user}/${repository}:${tagname} ${PWD}    # Se ejecuta en el terminal
-      - name: run # Ejecutamos el contenedor
-        run: docker run --detach --entrypoint python --name ${repository}  --volume "${PWD}/data:/data" ${registry}/${user}/${repository}:${tagname} anagrams.py
+      - name: run
+        run: docker run --detach --entrypoint python --name ${repository} --volume "${PWD}/data:/data" ${registry}/${user}/${repository}:${tagname} anagrams.py
       - name: test
-        run: while true ; do sleep ${sleep} ; docker logs ${repository} 2>& 1 ; docker logs ${repository} 2>& 1 | grep ${pattern} && break ; done
+        run: while true ; do sleep ${sleep} ; docker logs ${repository} 2>& 1 | grep "${pattern}" && break ; done
       
