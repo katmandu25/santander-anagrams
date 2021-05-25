@@ -22,5 +22,5 @@ jobs:
       - name: run # Ejecutamos el contenedor
         run: docker run --detach --entrypoint python --name ${repository}  --volume "${PWD}/data:/data" ${registry}/${user}/${repository}:${tagname} anagrams.py
       - name: test
-        run: while true ; do sleep ${sleep} ; docker logs ${repository} 2>& 1 | grep ${pattern} && break ; done
+        run: while true ; do sleep ${sleep} ; docker logs ${repository} 2>& 1 ; docker logs ${repository} 2>& 1 | grep ${pattern} && break ; done
       
