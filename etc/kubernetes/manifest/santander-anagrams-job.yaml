@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata: 
+  name: santander-anagrams-job
+spec:
+  template: 
+    spec:
+      containers:
+        -
+          args: 
+            - anagrams.py
+          command:
+            - phyton
+          image: index.docker.io/katmandu25/santander-anagrams:ci
+          imagePullPolicy: IfNotPresent
+          name: 
+          volumeMounts: # Con esto creamos el volumen
+            - 
+              mountPath: /data 
+              name: santnader-anagrams-volume
+              readOnly: true
+      initContainers:
+        -
+          args:
+          command:
+          env:
+          image:
+          name:
+
+        
+         
+              
+status:
