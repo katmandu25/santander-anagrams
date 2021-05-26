@@ -1,57 +1,55 @@
 apiVersion: batch/v1
 kind: Job
-metadata: 
+metadata:
   name: santander-anagrams-job
 spec:
-  template: 
+  template:
     spec:
       containers:
         -
-          args: 
+          args:
             - anagrams.py
           command:
-            - phyton
+            - python
           image: index.docker.io/katmandu25/santander-anagrams:ci
           imagePullPolicy: IfNotPresent
-          name: 
-          volumeMounts: # Con esto creamos el volumen
+          name: santander-anagrams-job-container
+          volumeMounts:
             - 
-              mountPath: /data 
+              mountPath: /data
               name: santander-anagrams-job-volume
               readOnly: true
-      initContainers: # Es un contenedor que prepara el camino al contenedor principal. En este caso se descaragará el sist de ficheros
+      initContainers:
         -
-          args:
+          args: 
             - -c
             - ' set -x ; cd /downloads ; rm -f ${filename} ; wget ${url}/${filename} '
           command: 
             - sh
           env:
-            -
+            - 
               name: filename
-              valuefrom: 
-                -
-                  configMapKeyRef: # Usamos el configmap para esta propiedad
-                    key: filename # Nombre de la variable
-                    name: santander-anagrams-job-cm
-            -
+              valueFrom: 
+                configMapKeyRef:
+                  key: filename
+                  name: santander-anagrams-job-cm
+            - 
               name: url
-              valuefrom:
-                -
-                  secretKeyRef:
-                    key: url
-                    name: santander-anagrams-secret
+              valueFrom:
+                secretKeyRef:
+                  key: url
+                  name: santander-anagrams-job-secret
           image: busybox
-          name: santander-anagrams-job-init-container
+          imagePullPolicy: IfNotPresent
+          name: santander-anagrams-job-initcontainer
           volumeMounts:
-           - 
-              mountPath: /downloads 
+            - 
+              mountPath: /downloads
               name: santander-anagrams-job-volume
               readOnly: false
-        restartPolicy: Never # Esto solo se ejecuta para descargar y que no se vuelva a ejecutar
-        volumes: # Carpeta en el pod // String en la BBDD  // Disco aparte 
-          - 
-            name: santander-anagrams-job-volume
-            emptyDir: {} #PersistentVolumenClaim #ConfigMap son las opciones que hay.
-status:{}
-  
+      restartPolicy: Never
+      volumes: 
+        - 
+          name: santander-anagrams-job-volume
+          emptyDir: {}
+status: {}
